@@ -8,7 +8,7 @@
           </div>
           <div class="shop_right">
             <section class="shop_detail_header">
-              <h4 class="shop_title ellipsis" >锄禾日当午，汗滴禾下土</h4>
+              <h4 class="shop_title ellipsis">锄禾日当午，汗滴禾下土</h4>
               <ul class="shop_detail_ul">
                 <li class="supports">保</li>
                 <li class="supports">准</li>
@@ -52,7 +52,7 @@
           </div>
           <div class="shop_right">
             <section class="shop_detail_header">
-              <h4 class="shop_title ellipsis" >锄禾日当午，汗滴禾下土</h4>
+              <h4 class="shop_title ellipsis">锄禾日当午，汗滴禾下土</h4>
               <ul class="shop_detail_ul">
                 <li class="supports">保</li>
                 <li class="supports">准</li>
@@ -96,7 +96,7 @@
           </div>
           <div class="shop_right">
             <section class="shop_detail_header">
-              <h4 class="shop_title ellipsis" >锄禾日当午，汗滴禾下土</h4>
+              <h4 class="shop_title ellipsis">锄禾日当午，汗滴禾下土</h4>
               <ul class="shop_detail_ul">
                 <li class="supports">保</li>
                 <li class="supports">准</li>
@@ -140,7 +140,7 @@
           </div>
           <div class="shop_right">
             <section class="shop_detail_header">
-              <h4 class="shop_title ellipsis" >锄禾日当午，汗滴禾下土</h4>
+              <h4 class="shop_title ellipsis">锄禾日当午，汗滴禾下土</h4>
               <ul class="shop_detail_ul">
                 <li class="supports">保</li>
                 <li class="supports">准</li>
@@ -193,7 +193,7 @@
       .shop_li
         bottom-border-1px(#f1f1f1)
         width 100%
-        >a
+        > a
           clearFix()
           display block
           box-sizing border-box
