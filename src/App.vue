@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <router-view/>
-    <FooterGuide/>
+    <FooterGuide v-show="$route.meta.isShow"/>
   </div>
 </template>
 
@@ -13,6 +13,7 @@
 
     mounted(){
       this.$store.dispatch('getAddress')
+      this.$store.dispatch('getShops')
     },
 
     components: {

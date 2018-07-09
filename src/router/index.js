@@ -13,19 +13,31 @@ export default new VueRouter({
   routes:[
     {
       path:'/msite',
-      component:MSite
+      component:MSite,
+      meta: {
+        isShow: true
+      }
     },
     {
       path:'/order',
-      component:Order
+      component:Order,
+      meta: {
+        isShow: true
+      }
     },
     {
       path:'/profile',
-      component:Profile
+      component:Profile,
+      meta: {
+        isShow: true
+      }
     },
     {
       path:'/search',
-      component:Search
+      component:Search,
+      meta: {
+        isShow: true
+      }
     },
     {
       path:'/login',
