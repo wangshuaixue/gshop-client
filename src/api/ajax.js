@@ -15,10 +15,11 @@ export default function ajax(url,data={},type='GET') {
       Object.keys(data).forEach(key=>{
         paramStr+= key+'='+data[key]+'&'
       })
+      //有两种情况一种是空串，一种是加？号的参数
       if(paramStr){
-        paramStr=paramStr.substring(0,paramStr.length-1)
+        paramStr='?'+paramStr.substring(0,paramStr.length-1)
       }
-      promise=axios.get(url+'?'+paramStr) //使用axios发送get请求
+      promise=axios.get(url+paramStr) //使用axios发送get请求
     }else{
       promise=axios.post(url,data)
     }
