@@ -9,15 +9,15 @@
         </div>
       </div>
       <div class="login_content">
-        <form>
+        <form @submit.prevent="login" >
           <div :class="{on:loginWay}">
             <section class="login_message">
               <input type="tel" maxlength="11" placeholder="手机号" v-model="phone">
-              <button class="get_verification" :class="{right_phone_number: isRightPhone}" @click="sendCode">
+              <button class="get_verification" :class="{right_phone_number: isRightPhone}"  @click.prevent="sendCode">
                 {{computeTime===0 ? '获取验证码' : `已发送${computeTime}s`}}</button>
             </section>
             <section class="login_verification">
-              <input type="tel" maxlength="8" placeholder="验证码">
+              <input type="tel" maxlength="8" placeholder="验证码" v-model="code">
             </section>
             <section class="login_hint">
               温馨提示：未注册硅谷外卖帐号的手机号，登录时将自动注册，且代表已同意
@@ -27,18 +27,18 @@
           <div :class="{on:!loginWay}">
             <section>
               <section class="login_message">
-                <input type="tel" maxlength="11" placeholder="手机/邮箱/用户名">
+                <input type="tel" maxlength="11" placeholder="手机/邮箱/用户名" v-model="name">
               </section>
               <section class="login_verification">
-                <input :type="isHide ? 'password' : 'text' " maxlength="8" placeholder="密码">
+                <input :type="isHide ? 'password' : 'text' " maxlength="8" placeholder="密码" v-model="pwd">
                 <div class="switch_button" :class="isHide ? 'off' : 'on'" @click="isHide=!isHide">
                   <div class="switch_circle" :class="{right: !isHide }"></div>
                   <span class="switch_text">{{isHide ? '' : 'abc'}}</span>
                 </div>
               </section>
               <section class="login_message">
-                <input type="text" maxlength="11" placeholder="验证码">
-                <img class="get_verification" src="./images/captcha.svg" alt="captcha">
+                <input type="text" maxlength="11" placeholder="验证码" v-model="captcha">
+                <img class="get_verification" src="http://localhost:4000/captcha" alt="captcha" @click="changeCaptcha" ref="captcha">
               </section>
             </section>
           </div>
@@ -50,17 +50,28 @@
         <i class="iconfont icon-jiantou2"></i>
       </a>
     </div>
+    <AlertTip v-show="isShowAlert" :alertText="alertText" @closeTip="closeTip"/>
   </section>
 </template>
 
 <script>
+  import {reqSendCode,reqPwdLogin,reqSmsLogin} from '../../api'
+  import AlertTip from '../../components/AlertTip/AlertTip.vue'
+
   export default {
     data(){
       return {
         loginWay:true,  //默认是短信登录
+        name:'',//用户名
+        pwd:'', //密码
+        captcha:'', //图形验证码
+        code:'',//短信验证码
         phone:'', //手机号
         computeTime:0,//计时时间
-        isHide:true   //是否隐藏密码
+        isHide:true,   //是否隐藏密码
+        isShowAlert:false, //是否显示警示框
+        alertText:'' //弹框内容
+
       }
     },
     computed:{
@@ -69,20 +80,96 @@
       }
     },
     methods:{
-      sendCode(){
+        //简单判断以及发送ajax请求
+      async sendCode(){
         //手机号正确并且没有计时的时候，发送验证码
         if(this.isRightPhone && this.computeTime===0){
           this.computeTime=30
           const IntervalId=setInterval(()=>{
             this.computeTime--
-            if(this.computeTime===0){
+            if(this.computeTime<0){
               clearInterval(IntervalId)
+              this.computeTime=0
             }
           },1000)
+
+          //发送ajax请求发送验证码
+          const result= await reqSendCode(this.phone)
+          if(result.code===1){//发送验证码失败
+            this.showTip(result.msg)
+            this.computeTime=0
+          }else{  //发生成功
+            console.log('发送成功')
+          }
+        }
+      },
+      //关闭弹框
+      closeTip(){
+        this.isShowAlert=false
+        this.alertText=''
+      },
+      //显示弹框
+      showTip(text){
+        this.isShowAlert=true
+        this.alertText=text
+      },
+      //请求登陆
+      async login() {
+        let result
+        if (this.loginWay) {//短信登录
+          const {phone, code, isRightPhone} = this
+          if (!isRightPhone) {
+            this.showTip('请输入正确的手机号')
+            return
+          } else if (!/^\d{6}/.test(code)) { //手机验证码，6位
+            this.showTip('请输入正确的验证码')
+            return
+          }
+          //发送请求
+          result = await reqSmsLogin(phone, code)
+
+        } else { //用户名密码登录
+          const {name, pwd, captcha} = this
+          if (!name) { // 用户名
+            this.showTip('请输入用户名')
+            return
+          } else if (!pwd) { // 密码
+            this.showTip('请输入密码')
+            return
+          } else if (!captcha) { // 图片验证码
+            this.showTip('请输入验证码')
+            return
+          }
+          //发送请求
+          result = await reqPwdLogin({name, pwd, captcha})
+          //在这里更新验证码，比外面更新次数少，更合适
+          if (result.code === 1) {
+            this.changeCaptcha()
+          }
+        }
+
+        //根据结果数据进行处理
+        if (result.code === 0) { //请求成功跳转到个人中心页面
+          const user = result.data
+          //保存user信息到state
+          this.$store.dispatch('saveUser', user)
+          //跳转到个人中心页面
+          this.$router.replace('/profile')
+        }else{ //失败弹出消息
+          this.showTip(result.msg)
         }
       },
 
+      //获取图形验证码
+      changeCaptcha(){
+        //每次必须重新请求一次，如果想让服务器知道这是一个新的请求需要加一个时间戳
+        console.log('-------')
+        this.$refs.captcha.src="http://localhost:4000/captcha?time="+Date.now()
+      }
 
+    },
+    components:{
+      AlertTip
     }
   }
 </script>

@@ -14,6 +14,7 @@
     mounted(){
       this.$store.dispatch('getAddress')
       this.$store.dispatch('getShops')
+      this.$store.dispatch('getUser')
     },
 
     components: {

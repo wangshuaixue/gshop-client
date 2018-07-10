@@ -31,72 +31,21 @@
   </style>
 </head>
 <body>
-<div id="wrap">
-  <div id="main">
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-    main<br>
-  </div>
-</div>
-<div id="footer">
-  footer
-</div>
+
 </body>
+<script type="text/javascript">
+  const func = (function (a) {
+    this.a = a
+    return function (a) {
+      console.log(a)
+      console.log(this)
+      a += this.a
+      return a
+    }
+  })((function (a, b) {
+    return a
+  })(1, 2))
+
+  console.log(func(4))
+</script>
 </html>
