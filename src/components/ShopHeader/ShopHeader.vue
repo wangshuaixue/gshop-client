@@ -107,7 +107,7 @@
           <span class="iconfont icon-close"></span>
         </div>
       </div>
-      <div class="activity-sheet-cover" @click="isShowSupport = false "></div>
+      <div class="activity-sheet-cover"></div>
     </div>
   </div>
 </template>
