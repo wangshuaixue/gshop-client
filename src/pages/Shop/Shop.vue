@@ -20,6 +20,11 @@
   import ShopHeader from '../../components/ShopHeader/ShopHeader.vue'
 
   export default {  //配置对象
+    mounted(){
+      this.$store.dispatch('getShopInfo')
+      this.$store.dispatch('getShopGoods')
+      this.$store.dispatch('getShopRatings')
+    },
     components:{
       ShopHeader
     }

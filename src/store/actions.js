@@ -3,7 +3,10 @@ import {
   RECEIVE_SHOPS,
   RECEIVE_ADDRESS,
   RECEIVE_USER,
-  RESET_USER
+  RESET_USER,
+  RECEIVE_INFO,
+  RECEIVE_RATINGS,
+  RECEIVE_GOODS
 } from './mutation-types'
 
 import {
@@ -11,7 +14,10 @@ import {
   reqFoodTypes,
   reqShops,
   reqUser,
-  reqLogout
+  reqLogout,
+  reqShopGoods,
+  reqShopRatings,
+  reqShopInfo
 } from '../api'
 
 export default {
@@ -87,7 +93,35 @@ export default {
     if(result.code===0){
       commit(RESET_USER)
     }
-  }
+  },
   
+  //mock  异步获取商品列表
+  async getShopGoods ({commit},callback) {
+    const result = await reqShopGoods()
+    if(result.code===0) {
+      const goods = result.data
+      commit(RECEIVE_GOODS, {goods})
+      //有数据之后再调用
+      callback && callback()
+    }
+  },
+  
+  // 异步获取评价列表
+  async getShopRatings ({commit}) {
+    const result = await reqShopRatings()
+    if(result.code===0) {
+      const ratings = result.data
+      commit(RECEIVE_RATINGS, {ratings})
+    }
+  },
+  
+  // 异步获取商品列表
+  async getShopInfo ({commit}) {
+    const result = await reqShopInfo()
+    if(result.code===0) {
+      const info = result.data
+      commit(RECEIVE_INFO, {info})
+    }
+  },
   
 }

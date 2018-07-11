@@ -34,3 +34,7 @@ export const reqUser = () => ajax(`/api/userinfo`)
 // [10、用户登出](#10用户登出)<br/>
 export const reqLogout = () => ajax(`/api/logout`)
 
+//mock数据
+export const reqShopGoods = () =>ajax('/goods')
+export const reqShopRatings = () =>ajax('/ratings')
+export const reqShopInfo = () =>ajax('/info')
