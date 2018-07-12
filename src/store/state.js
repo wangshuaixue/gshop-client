@@ -7,6 +7,7 @@ export default {
   user:{}, //用户信息，用于登录
   info:{},
   ratings:[],
-  goods:[]
+  goods:[],
+  cartFoods:[]
   
 }
