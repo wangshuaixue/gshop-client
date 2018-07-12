@@ -41,8 +41,9 @@
           </li>
         </ul>
       </div>
-
+      <ShopCart/>
     </div>
+    <Food :food="food"/>
   </div>
 </template>
 
@@ -50,11 +51,13 @@
   import BScroll from 'better-scroll'
   import {mapState} from 'vuex'
   import CartControl from '../../../components/CartControl/CartControl.vue'
+  import ShopCart from '../../../components/ShopCart/ShopCart.vue'
   export default {
     data () {
       return {
         scrollY: 0, // 滚动的y轴坐标
         tops: [], // 所有li的top组成的数组
+        food:{}
       }
     },
     mounted () {
@@ -122,7 +125,8 @@
     },
 
     components:{
-      CartControl
+      CartControl,
+      ShopCart
     }
   }
 </script>

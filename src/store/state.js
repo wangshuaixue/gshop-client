@@ -5,9 +5,9 @@ export default {
   categorys: [], // 分类数组
   shops: [], //商家数组
   user:{}, //用户信息，用于登录
-  info:{},
-  ratings:[],
-  goods:[],
-  cartFoods:[]
+  info:{}, //商家信息
+  ratings:[], //评论列表
+  goods:[], //点餐列表
+  cartFoods:[], //购物车初始状态
   
 }

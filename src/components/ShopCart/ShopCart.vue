@@ -2,50 +2,113 @@
   <div>
     <div class="shopcart">
       <div class="content">
-        <div class="content-left">
+        <div class="content-left"  @click="toggleShow">
           <div class="logo-wrapper">
-            <div class="logo highlight">
-              <i class="iconfont icon-shopping_cart highlight"></i>
+            <div class="logo" :class="{highlight:totalCount}" >
+              <i class="iconfont icon-shopping_cart" :class="{highlight:totalCount}"></i>
             </div>
-            <div class="num">1</div>
+            <div class="num" v-if="totalCount">{{totalCount}}</div>
           </div>
-          <div class="price highlight">￥10</div>
-          <div class="desc">另需配送费￥4元</div>
+          <div class="price highlight">￥{{totalPrice}}</div>
+          <div class="desc">另需配送费￥{{info.deliveryPrice}}元</div>
         </div>
         <div class="content-right">
-          <div class="pay not-enough">
-            还差￥10元起送
+          <div class="pay" :class="payClass">
+            {{payText}}
           </div>
         </div>
       </div>
-      <div class="shopcart-list" style="display: none;">
+      <div class="shopcart-list" v-show="listShow">
         <div class="list-header">
           <h1 class="title">购物车</h1>
           <span class="empty">清空</span>
         </div>
         <div class="list-content">
           <ul>
-            <li class="food">
-              <span class="name">红枣山药糙米粥</span>
-              <div class="price"><span>￥10</span></div>
+            <li class="food" v-for="(food,index) in cartFoods" :key="index">
+              <span class="name">{{food.name}}</span>
+              <div class="price"><span>￥{{food.price}}</span></div>
               <div class="cartcontrol-wrapper">
-                <div class="cartcontrol">
-                  <div class="iconfont icon-remove_circle_outline"></div>
-                  <div class="cart-count">1</div>
-                  <div class="iconfont icon-add_circle"></div>
-                </div>
+              <CartControl :food="food"/>
               </div>
             </li>
           </ul>
         </div>
       </div>
     </div>
-    <div class="list-mask" style="display: none;"></div>
+    <div class="list-mask" v-show="listShow" @click="toggleShow"></div>
   </div>
 </template>
 <script>
+  import CartControl from '../../components/CartControl/CartControl.vue'
+  import BScroll from 'better-scroll'
+  import {mapState,mapGetters} from 'vuex'
   export default {  //配置对象
+    data(){
+      return {
+        isShow:false
+      }
+    },
+    computed:{
+      ...mapState(['cartFoods','info']),
+      ...mapGetters(['totalCount','totalPrice']),
+      listShow(){
+        if(this.totalCount===0){ //总数量为0时，这里是解决只剩下头部但是没有内容的部分
+          this.isShow=false
+          return false
+        }
 
+        //如何实现单例对象：1.在创建前判断是否已经创建过，只有不存在再创建； 2.在创建后，保存创建的对象
+        if(this.isShow){
+          this.$nextTick(function(){
+            //整个组件对象上保证组件对象只有一个
+            if(!this.scroll){
+              this.scroll=new BScroll('.list-content',{
+                click:true  //点击多次的话会同时分发很多个事件，这里需要解决这个问题
+              })
+            }else{
+              //通知scroll对象(刷新)重新统计一下高度，确定到底要不要生成滚动
+              this.scroll.refresh()
+            }
+          })
+        }
+
+        return this.isShow
+      },
+      payClass(){
+        //not-enough enough
+        const {minPrice}=this.info
+        const {totalPrice}=this
+        if(minPrice>totalPrice){
+          return 'not-enough'
+        }else{
+          return 'enough'
+        }
+      },
+      payText(){
+        const {minPrice}=this.info
+        const {totalPrice}=this
+        if(totalPrice===0){
+          return `￥${minPrice}元起送`
+        }else if(totalPrice<minPrice){
+          return `还差￥${minPrice-totalPrice}元起送`
+        }else {
+          return '去结算'
+        }
+      }
+
+    },
+    methods:{
+      toggleShow(){
+        // 只有有数量才去更新
+        if(this.totalCount) {
+          this.isShow = !this.isShow
+        }
+      }
+    },
+    components:{
+      CartControl
+    }
   }
 </script>
 <style lang="stylus" rel="stylesheet/stylus" scoped>
@@ -142,6 +205,7 @@
       top: 0
       z-index: -1
       width: 100%
+      transform translateY(-100%)
       .list-header
         height: 40px
         line-height: 40px
