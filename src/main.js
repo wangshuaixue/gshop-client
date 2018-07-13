@@ -3,10 +3,13 @@ import App from './App.vue'
 import {Button} from 'mint-ui'
 import router from './router'
 import store from './store'
+import Split from './components/Split/Split.vue'
 
+import './filter'  //日期格式化
 import './mock/mockServer' //只需要引入即可,保证这个文件可以被打包
 
 Vue.component(Button.name, Button)
+Vue.component('Split',Split)
 
 /* eslint-disable no-new */
 new Vue({

@@ -1,5 +1,9 @@
-import MSite from '../pages/MSite/MSite.vue'
-import Profile from '../pages/Profile/Profile.vue'
+// import MSite from '../pages/MSite/MSite.vue'
+// import Profile from '../pages/Profile/Profile.vue'
+// 优化  路由组件懒加载,需要的时候才加载，不需要的时候不用加载，上面那种的话页面刚上来就会全部加载所有路由组件
+const MSite = () => import('../pages/MSite/MSite.vue')
+const Profile = () => import('../pages/Profile/Profile.vue')
+
 import Search from '../pages/Search/Search.vue'
 import Order from '../pages/Order/Order.vue'
 import Login from '../pages/Login/Login.vue'
